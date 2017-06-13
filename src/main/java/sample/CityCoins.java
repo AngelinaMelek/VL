@@ -3,7 +3,7 @@ package sample;
 import java.util.ArrayList;
 
 public class CityCoins {
-    ArrayList<String> output = new ArrayList<>();
+    ArrayList<String> output = new ArrayList<String>();
 
     CityGrid[][] cityGrid = new CityGrid[25][25];
 

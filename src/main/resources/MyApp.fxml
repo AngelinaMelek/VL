@@ -7,6 +7,6 @@
    <children>
       <TextArea fx:id="ta_input" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" text="3&#10;France 1 4 4 6 &#10;Spain 3 1 6 3 &#10;Portugal 1 1 2 2 &#10;1&#10;Luxembourg 1 1 1 1 &#10;2&#10;Netherlands 1 3 2 4 &#10;Belgium 1 1 2 2 &#10;0" />
       <TextArea fx:id="ta_output" layoutX="224.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" />
-      <Button fx:id="my_btn" layoutX="14.0" layoutY="223.0" mnemonicParsing="false" onMouseClicked="#on_click" text="Button" />
+      <Button fx:id="my_btn" layoutX="14.0" layoutY="223.0" mnemonicParsing="false" onMouseClicked="#on_click" text="Do something..." />
    </children>
 </AnchorPane>
