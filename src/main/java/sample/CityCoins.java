@@ -14,13 +14,13 @@ public class CityCoins {
             input.add(s);
         }
 
-        for(int i=0; input.get(i).charAt(0)!='0';i++){
+        for(int i=0, index=0; input.get(i).charAt(0)!='0';i++,index++){
             String[] s = new String[Integer.parseInt(input.get(i))];
             for(int j=0;j<s.length;j++, i++){
                 s[j] = input.get(i+1);
                 System.out.println(s[j]);
             }
-            makeCoinsMovement(s,i);
+            makeCoinsMovement(s,index);
 
             System.out.println("\n");
         }
@@ -42,9 +42,8 @@ public class CityCoins {
         checkCountriesFilled();
 
         int i=0;
-        for(; finish!=true; i++){
+        for(; !checkCountriesFilled(); i++){
             sendCoins();
-            checkCountriesFilled();
         }
         output.add("Case Number "+(index+1));
         output.add(""+i);
@@ -81,18 +80,14 @@ public class CityCoins {
         }
     }
 
-    boolean finish = false;
-    public void checkCountriesFilled(){
-        finish = true;
+    public boolean checkCountriesFilled(){
         for(CityGrid ci[]: cityGrid)
             for(CityGrid c: ci)
                 if(c.itUsed)
                     for(Coins i: c.coins)
                         if(i.count == 0)
-                        {
-                            finish = false;
-                            return;
-                        }
+                            return false;
+        return true;
     }
 
     private void sendCoins(){
