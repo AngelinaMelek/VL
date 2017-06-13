@@ -3,9 +3,9 @@ package sample;
 import java.util.ArrayList;
 
 public class CityCoins {
-    ArrayList<String> output = new ArrayList<String>();
+    private ArrayList<String> output = new ArrayList<String>();
 
-    CityGrid[][] cityGrid = new CityGrid[25][25];
+    public ArrayList<String> getOutput(){return output;}
 
     public void setCities(String cities_strings) {
         ArrayList<String> input = new ArrayList<String>();
@@ -18,16 +18,14 @@ public class CityCoins {
             String[] s = new String[Integer.parseInt(input.get(i))];
             for(int j=0;j<s.length;j++, i++){
                 s[j] = input.get(i+1);
-                System.out.println(s[j]);
             }
             makeCoinsMovement(s,index);
-
-            System.out.println("\n");
         }
     }
 
-    public void makeCoinsMovement(String[] s, int index){
+    private void makeCoinsMovement(String[] s, int index){
         Country[] countries = new Country[s.length];
+        CityGrid[][] cityGrid = new CityGrid[25][25];
         for(int i=0; i< s.length; i++){
             String[] _tmp = s[i].split(" ");
 
@@ -38,19 +36,18 @@ public class CityCoins {
             countries[i].xh   = Integer.parseInt(_tmp[3]);
             countries[i].yh   = Integer.parseInt(_tmp[4]);
         }
-        createCountry(countries);
-        checkCountriesFilled();
+        createCountry(countries, cityGrid);
+        checkCountriesFilled(cityGrid);
 
         int i=0;
-        for(; !checkCountriesFilled(); i++){
-            sendCoins();
+        for(; !checkCountriesFilled(cityGrid); i++){
+            sendCoins(cityGrid);
         }
         output.add("Case Number "+(index+1));
         output.add(""+i);
-
     }
 
-    public void createCountry(Country[] countries){
+    private void createCountry(Country[] countries, CityGrid[][] cityGrid){
 
         for(int i=0; i<25;i++)
             for(int j=0; j<25; j++)
@@ -80,7 +77,7 @@ public class CityCoins {
         }
     }
 
-    public boolean checkCountriesFilled(){
+    private boolean checkCountriesFilled(CityGrid[][] cityGrid){
         for(CityGrid ci[]: cityGrid)
             for(CityGrid c: ci)
                 if(c.itUsed)
@@ -90,12 +87,12 @@ public class CityCoins {
         return true;
     }
 
-    private void sendCoins(){
-        calculateTransactionAmount();
-        makeTransaction();
+    private void sendCoins(CityGrid[][] cityGrid){
+        calculateTransactionAmount(cityGrid);
+        makeTransaction(cityGrid);
     }
 
-    private void calculateTransactionAmount(){
+    private void calculateTransactionAmount(CityGrid[][] cityGrid){
         for(CityGrid ci[]: cityGrid)
             for(CityGrid c: ci)
                 if(c.itUsed)
@@ -103,7 +100,7 @@ public class CityCoins {
                         c.coins[i].transaction_amount = c.coins[i].count/1000;
     }
 
-    private void makeTransaction(){
+    private void makeTransaction(CityGrid[][] cityGrid){
         for(int i=0; i<cityGrid.length; i++)
             for(int j=0; j<cityGrid[i].length; j++)
                 if(cityGrid[i][j].itUsed){

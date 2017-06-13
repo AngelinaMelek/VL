@@ -15,7 +15,7 @@ public class MyAppController {
         CityCoins cityCoins = new CityCoins();
         cityCoins.setCities(ta_input.getText());
         String answer="";
-        for (String s:cityCoins.output) {
+        for (String s:cityCoins.getOutput()) {
             answer+=s+"\n";
         }
         ta_output.setText(answer);
