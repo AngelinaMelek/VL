@@ -14,13 +14,36 @@ public class CityCoins {
             input.add(s);
         }
 
+        if(valid(input))
         for(int i=0, index=0; input.get(i).charAt(0)!='0';i++,index++){
             String[] s = new String[Integer.parseInt(input.get(i))];
             for(int j=0;j<s.length;j++, i++){
                 s[j] = input.get(i+1);
             }
             makeCoinsMovement(s,index);
+        }else{
+            output.add("not valid");
         }
+    }
+
+    private boolean valid(ArrayList<String> input){
+
+        if(!input.get(input.size() - 1).equals("0"))
+            return false;
+
+        for(int i=0; i<input.size(); i++){
+            int size = 0;
+            try {
+                size = Integer.parseInt(input.get(i));
+            }catch (Exception e){
+                return false;
+            }
+            for(int j=0; j<size; j++, i++)
+                if(input.get(i+1).split(" ").length!= 5)
+                    return false;
+        }
+
+        return true;
     }
 
     private void makeCoinsMovement(String[] s, int index){
