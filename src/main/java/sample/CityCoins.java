@@ -27,7 +27,7 @@ public class CityCoins {
         return output;
     }
 
-    private int findMaxX(String[] strings){
+    public int findMaxX(String[] strings){
         int max = 0;
         for(String s: strings){
             String[] _tmp = s.split(" ");
@@ -37,7 +37,7 @@ public class CityCoins {
         return max;
     }
 
-    private  int findMaxY(String[] strings){
+    public int findMaxY(String[] strings){
         int max = 0;
         for(String s: strings){
             String[] _tmp = s.split(" ");
@@ -47,8 +47,7 @@ public class CityCoins {
         return max;
     }
 
-    private boolean valid(ArrayList<String> input){
-
+    public boolean valid(ArrayList<String> input){
         if(!input.get(input.size() - 1).equals("0"))
             return false;
 
