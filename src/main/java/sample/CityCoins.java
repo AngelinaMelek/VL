@@ -1,29 +1,50 @@
 package sample;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class CityCoins {
     private ArrayList<String> output = new ArrayList<String>();
 
-    public ArrayList<String> getOutput(){return output;}
-
-    public void setCities(String cities_strings) {
+    public ArrayList<String> setCities(String cities_strings) {
         ArrayList<String> input = new ArrayList<String>();
 
-        for (String s : cities_strings.split("\n")) {
-            input.add(s);
+        Collections.addAll(input, cities_strings.split("\n"));
+
+        if(!valid(input)){
+            output.add("not valid");
+            return output;
         }
 
-        if(valid(input))
-        for(int i=0, index=0; input.get(i).charAt(0)!='0';i++,index++){
+        for(int i=0, index=0; input.get(i).charAt(0)!='0';i++,index++) {
             String[] s = new String[Integer.parseInt(input.get(i))];
-            for(int j=0;j<s.length;j++, i++){
-                s[j] = input.get(i+1);
-            }
-            makeCoinsMovement(s,index);
-        }else{
-            output.add("not valid");
+
+            for (int j = 0; j < s.length; j++)
+                s[j] = input.get(++i);
+
+            makeCoinsMovement(s, index, findMaxX(s), findMaxY(s));
         }
+        return output;
+    }
+
+    private int findMaxX(String[] strings){
+        int max = 0;
+        for(String s: strings){
+            String[] _tmp = s.split(" ");
+            if(Integer.parseInt(_tmp[3])>max)
+                max = Integer.parseInt(_tmp[3]);
+        }
+        return max;
+    }
+
+    private  int findMaxY(String[] strings){
+        int max = 0;
+        for(String s: strings){
+            String[] _tmp = s.split(" ");
+            if(Integer.parseInt(_tmp[4])>max)
+                max = Integer.parseInt(_tmp[4]);
+        }
+        return max;
     }
 
     private boolean valid(ArrayList<String> input){
@@ -32,7 +53,7 @@ public class CityCoins {
             return false;
 
         for(int i=0; i<input.size(); i++){
-            int size = 0;
+            int size;
             try {
                 size = Integer.parseInt(input.get(i));
             }catch (Exception e){
@@ -46,9 +67,9 @@ public class CityCoins {
         return true;
     }
 
-    private void makeCoinsMovement(String[] s, int index){
+    private void makeCoinsMovement(String[] s, int index, int max_x, int max_y){
         Country[] countries = new Country[s.length];
-        CityGrid[][] cityGrid = new CityGrid[25][25];
+        CityGrid[][] cityGrid = new CityGrid[max_x+2][max_y+2];
         for(int i=0; i< s.length; i++){
             String[] _tmp = s[i].split(" ");
 
@@ -63,39 +84,28 @@ public class CityCoins {
         checkCountriesFilled(cityGrid);
 
         int i=0;
-        for(; !checkCountriesFilled(cityGrid); i++){
+        for(; !checkCountriesFilled(cityGrid); i++)
             sendCoins(cityGrid);
-        }
+
         output.add("Case Number "+(index+1));
         output.add(""+i);
     }
 
     private void createCountry(Country[] countries, CityGrid[][] cityGrid){
 
-        for(int i=0; i<25;i++)
-            for(int j=0; j<25; j++)
+        for(int i=0; i<cityGrid.length;i++)
+            for(int j=0; j<cityGrid[i].length; j++)
                 cityGrid[i][j] = new CityGrid();
 
         for(int n = 0; n<countries.length; n++){
             for(int i=countries[n].xl; i<=countries[n].xh; i++)
                 for(int j=countries[n].yl; j<=countries[n].yh; j++){
-                    cityGrid[i][j].countryName = countries[n].name;
                     cityGrid[i][j].coins = new Coins[countries.length];
-                    //cityGrid[i][j].coins = new int[countries.length];
-                    for(int m=0; m<countries.length; m++)
-                        if(m==n)
-                        {
-                            cityGrid[i][j].coins[m] = new Coins();
-                            cityGrid[i][j].coins[m].count = 1000000;
-                            cityGrid[i][j].coins[m].countryName = countries[m].name;
-                        }
-                        else
-                        {
-                            cityGrid[i][j].coins[m] = new Coins();
-                            cityGrid[i][j].coins[m].count = 0;
-                            cityGrid[i][j].coins[m].countryName = countries[m].name;
-                        }
-                    cityGrid[i][j].itUsed = true;
+                    for(int m=0; m<countries.length; m++) {
+                        cityGrid[i][j].coins[m] = new Coins();
+                        cityGrid[i][j].coins[m].count = m==n ? 1000000 : 0;
+                        cityGrid[i][j].itUsed = true;
+                    }
                 }
         }
     }
@@ -129,32 +139,28 @@ public class CityCoins {
                 if(cityGrid[i][j].itUsed){
 
                     if(cityGrid[i][j-1].itUsed){
-                        for(int n=0; n<cityGrid[i][j].coins.length; n++)
-                        {
+                        for(int n=0; n<cityGrid[i][j].coins.length; n++){
                             cityGrid[i][j].coins[n].count -= cityGrid[i][j].coins[n].transaction_amount;
                             cityGrid[i][j-1].coins[n].count += cityGrid[i][j].coins[n].transaction_amount;
                         }
                     }
 
                     if(cityGrid[i][j+1].itUsed){
-                        for(int n=0; n<cityGrid[i][j].coins.length; n++)
-                        {
+                        for(int n=0; n<cityGrid[i][j].coins.length; n++){
                             cityGrid[i][j].coins[n].count -= cityGrid[i][j].coins[n].transaction_amount;
                             cityGrid[i][j+1].coins[n].count += cityGrid[i][j].coins[n].transaction_amount;
                         }
                     }
 
                     if(cityGrid[i-1][j].itUsed){
-                        for(int n=0; n<cityGrid[i][j].coins.length; n++)
-                        {
+                        for(int n=0; n<cityGrid[i][j].coins.length; n++){
                             cityGrid[i][j].coins[n].count -= cityGrid[i][j].coins[n].transaction_amount;
                             cityGrid[i-1][j].coins[n].count += cityGrid[i][j].coins[n].transaction_amount;
                         }
                     }
 
                     if(cityGrid[i+1][j].itUsed){
-                        for(int n=0; n<cityGrid[i][j].coins.length; n++)
-                        {
+                        for(int n=0; n<cityGrid[i][j].coins.length; n++){
                             cityGrid[i][j].coins[n].count -= cityGrid[i][j].coins[n].transaction_amount;
                             cityGrid[i+1][j].coins[n].count += cityGrid[i][j].coins[n].transaction_amount;
                         }

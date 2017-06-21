@@ -13,12 +13,11 @@ public class MyAppController {
 
     public void on_click(){
         CityCoins cityCoins = new CityCoins();
-        cityCoins.setCities(ta_input.getText());
-        String answer="";
-        for (String s:cityCoins.getOutput()) {
-            answer+=s+"\n";
-        }
-        ta_output.setText(answer);
+        StringBuilder answer= new StringBuilder();
+        for (String s: cityCoins.setCities(ta_input.getText()))
+            answer.append(s).append("\n");
+
+        ta_output.setText(answer.toString());
     }
 
 }
